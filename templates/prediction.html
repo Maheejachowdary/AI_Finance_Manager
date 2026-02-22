@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Expense Prediction</title>
+
+    <link rel="stylesheet"
+     href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        body {
+            font-family: 'Poppins', Arial, sans-serif;
+            background: linear-gradient(135deg, #ffc6d6, #ffe3ec);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .prediction-card {
+            background: white;
+            width: 650px;
+            padding: 30px;
+            border-radius: 16px;
+            text-align: center;
+            box-shadow: 0px 10px 25px rgba(0,0,0,0.08);
+        }
+
+        .icon-circle {
+            width: 60px;
+            height: 60px;
+            background: #ffd1dc;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 15px;
+        }
+
+        .icon-circle i {
+            font-size: 28px;
+            color: #c2185b;
+        }
+
+        h2 {
+            color: #c2185b;
+        }
+
+        .prediction-box {
+            background: #fff3f6;
+            padding: 15px;
+            border-radius: 12px;
+            margin: 15px 0;
+            font-size: 18px;
+            font-weight: 600;
+            color: #374151;
+        }
+
+        .metrics {
+            background: #f9fafb;
+            padding: 12px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            font-size: 14px;
+            color: #374151;
+        }
+
+        .graph-section {
+            margin-top: 20px;
+        }
+
+        .back-btn {
+            text-decoration: none;
+            display: inline-block;
+            padding: 10px 16px;
+            border-radius: 10px;
+            background: #c084fc;
+            color: white;
+            font-weight: 600;
+            margin-top: 15px;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="prediction-card">
+
+    <div class="icon-circle">
+        <i class="fa-solid fa-brain"></i>
+    </div>
+
+    <h2>AI Expense Prediction</h2>
+
+    {% if prediction %}
+
+        <div class="prediction-box">
+            Predicted Next Month Expense:
+            <br> ₹{{ prediction }}
+        </div>
+
+        <div class="metrics">
+            <strong>Model Metrics:</strong><br>
+            MAE: {{ mae }} <br>
+            R² Score: {{ r2 }}
+        </div>
+
+        <div class="graph-section">
+            <h3>Actual vs Predicted Graph</h3>
+            <img src="{{ url_for('static', filename='model_analysis.png') }}" width="500">
+        </div>
+
+    {% else %}
+        <div class="prediction-box">
+            Not enough data to predict.
+        </div>
+    {% endif %}
+
+    <a class="back-btn" href="/dashboard">
+        <i class="fa-solid fa-arrow-left"></i> Back to Dashboard
+    </a>
+
+</div>
+
+</body>
+</html>

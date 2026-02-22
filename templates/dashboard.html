@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Dashboard</title>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet"
+     href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        body {
+            font-family: 'Poppins', Arial, sans-serif;
+
+            /* Medium balanced baby pink background */
+            background: linear-gradient(135deg, #ffc6d6, #ffe3ec);
+
+            min-height: 100vh;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Bright baby-pink top banner */
+        .header {
+            background: linear-gradient(135deg, #ffb6c9, #ffd1dc);
+            color: #4a1f2f;
+            padding: 18px;
+            text-align: center;
+            font-size: 22px;
+            font-weight: 700;
+            box-shadow: 0px 4px 10px rgba(0,0,0,0.08);
+        }
+
+        .container {
+            width: 85%;
+            margin: 30px auto;
+        }
+
+        .welcome-card {
+            background: white;
+            padding: 20px 25px;
+            border-radius: 14px;
+            box-shadow: 0px 8px 18px rgba(0,0,0,0.08);
+            margin-bottom: 20px;
+        }
+
+        .actions {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .action-btn {
+            text-decoration: none;
+            padding: 12px 16px;
+            border-radius: 12px;
+            color: #374151;
+            font-weight: 600;
+            background: white;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            justify-content: center;
+            box-shadow: 0px 6px 14px rgba(0,0,0,0.07);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .action-btn i {
+            font-size: 16px;
+        }
+
+        .predict { border-left: 6px solid #c084fc; }
+        .income  { border-left: 6px solid #86efac; }
+        .expense { border-left: 6px solid #fdba74; }
+        .logout  { border-left: 6px solid #9ca3af; }
+
+        .action-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0px 10px 20px rgba(0,0,0,0.1);
+        }
+
+        .chart-card {
+            background: white;
+            padding: 25px;
+            border-radius: 14px;
+            box-shadow: 0px 8px 18px rgba(0,0,0,0.08);
+        }
+
+        h3 {
+            color: #1f2937;
+            margin-bottom: 15px;
+        }
+
+        canvas {
+            max-width: 100%;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="header">
+    Personal Finance Dashboard
+</div>
+
+<div class="container">
+
+    <div class="welcome-card">
+        <h2>Welcome, {{ session['user'] }}</h2>
+        <p style="color:#6b7280;">
+            Track, analyze, and manage your expenses easily.
+        </p>
+    </div>
+
+    <div class="actions">
+        <a class="action-btn predict" href="/finance/predict">
+            <i class="fa-solid fa-brain"></i> Predict Next Month
+        </a>
+
+        <a class="action-btn income" href="{{ url_for('finance.add_income') }}">
+            <i class="fa-solid fa-wallet"></i> Add Income
+        </a>
+
+        <a class="action-btn expense" href="{{ url_for('finance.add_expense') }}">
+            <i class="fa-solid fa-receipt"></i> Add Expense
+        </a>
+
+        <!-- 🟢 NEW SET ALERT BUTTON -->
+        <a class="action-btn alert" href="{{ url_for('alert.set_alert') }}">
+            <i class="fa-solid fa-bell"></i> Set Expense Alert
+        </a>
+
+        <a class="action-btn logout" href="{{ url_for('auth.logout') }}">
+            <i class="fa-solid fa-right-from-bracket"></i> Logout
+        </a>
+    </div>
+
+    <div class="chart-card">
+        <h3>Monthly Expense Summary</h3>
+        <canvas id="expenseChart"></canvas>
+    </div>
+
+</div>
+
+<script>
+const ctx = document.getElementById('expenseChart');
+
+new Chart(ctx, {
+    type: 'bar',
+    data: {
+        labels: ['Food', 'Travel', 'Rent', 'Utilities', 'Education'],
+        datasets: [{
+            label: 'Expenses',
+            data: {{ expense_values | safe }},
+            backgroundColor: 'rgba(192, 132, 252, 0.6)',
+            borderRadius: 8
+        }]
+    },
+    options: {
+        responsive: true,
+        plugins: {
+            legend: { position: 'top' }
+        }
+    }
+});
+</script>
+
+</body>
+</html>
